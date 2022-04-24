@@ -30,3 +30,12 @@ stages:
         command: 'build'
         projects: '**/*.sln'
         arguments: --configuration Release
+
+    - task: Docker@2
+      displayName: Create Docker image
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      inputs:
+        containerRegistry: 'TooManyCookBooks ACR Dev'
+        repository: 'toomanycookbooksapi-dev'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
