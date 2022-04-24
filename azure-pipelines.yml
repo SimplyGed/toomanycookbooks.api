@@ -9,7 +9,7 @@ trigger:
 variables:
   Major: 0
   Minor: 0
-
+  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 
 name: $(Major).$(Minor).$(Rev:r)
 
@@ -21,7 +21,7 @@ stages:
   displayName: Build
   
   jobs:
-  - job:
+  - job: Build
     displayName: Build
     steps:
     - task: DotNetCoreCLI@2
@@ -33,10 +33,25 @@ stages:
 
     - task: Docker@2
       displayName: Create Docker image
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      condition: and(succeeded(), eq(variables.isMain, 'true'))
       inputs:
         containerRegistry: 'TooManyCookBooks ACR Dev'
         repository: 'toomanycookbooksapi-dev'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: $(Build.BuildNumber)
+
+  - job:
+    displayName: Deploy
+    condition: and(succeeded(), eq(variables.isMain, 'true'))
+    dependsOn: Build
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Visual Studio Premium with MSDN(bbe8e064-d490-470f-8e8a-485bd7227583)'
+        appType: 'webAppContainer'
+        WebAppName: 'toomanycookbooksapi-dev'
+        DockerNamespace: 'toomanycookbooksdev'
+        DockerRepository: 'toomanycookbooksapi-dev'
+        DockerImageTag: '$(Build.BuildNumber)'
