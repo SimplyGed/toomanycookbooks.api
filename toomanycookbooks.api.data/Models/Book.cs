@@ -14,6 +14,7 @@ namespace TooManyCookbooks.Api.Data.Models
 
         public ICollection<Ingredient>? Ingredients { get; set; }
 
+        public Guid BookId { get; set; }
         public virtual Book? Book { get; set; }
     }
 
