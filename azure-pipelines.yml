@@ -39,3 +39,4 @@ stages:
         repository: 'toomanycookbooksapi-dev'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
+        tags: $(Build.BuildNumber)
