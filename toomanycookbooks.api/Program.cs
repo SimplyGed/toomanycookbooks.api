@@ -7,6 +7,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
+builder.Services.Configure<GlobalConfiguration>(builder.Configuration.GetSection(GlobalConfiguration.Name));
 
 var app = builder.Build();
 
