@@ -10,7 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 
-builder.Services.Configure<GlobalConfiguration>(builder.Configuration.GetSection(GlobalConfiguration.Name));
+builder.Services.AddSingleton(sp => sp.GetService<IConfiguration>()!.GetSection(GlobalConfiguration.Name).Get<GlobalConfiguration>());
 
 var app = builder.Build();
 

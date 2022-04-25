@@ -9,9 +9,9 @@ namespace TooManyCookbooks.Api.Contollers
     {
         private readonly GlobalConfiguration _config;
 
-        public VersionController(IOptions<GlobalConfiguration> config)
+        public VersionController(GlobalConfiguration config)
         {
-            _config = config.Value;
+            _config = config;
         }
 
         [HttpGet]
