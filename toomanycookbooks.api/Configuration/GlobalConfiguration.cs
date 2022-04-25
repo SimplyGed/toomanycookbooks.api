@@ -1,6 +1,9 @@
-public class GlobalConfiguration
+namespace TooManyCookbooks.Api.Configuration
 {
-    public static string Name => "Global";
+    public class GlobalConfiguration
+    {
+        public static string Name => "Global";
 
-    public string? Version { get; set; }
+        public string? Version { get; set; }
+    }
 }
