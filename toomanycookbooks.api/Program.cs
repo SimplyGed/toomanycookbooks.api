@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using TooManyCookbooks.Api.Configuration;
+using TooManyCookbooks.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 
 builder.Services.AddSingleton(sp => sp.GetService<IConfiguration>()!.GetSection(GlobalConfiguration.Name).Get<GlobalConfiguration>());
+
+builder.Services.AddDbContext<TmcbDbContext>(options => {
+    options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(TmcbDbContext)));
+});
 
 var app = builder.Build();
 
