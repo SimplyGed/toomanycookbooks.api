@@ -38,4 +38,12 @@ app.UseEndpoints(builder => {
     builder.MapHealthChecks("/api/status");
 });
 
+var db = app.Services.GetService<TmcbDbContext>();
+if ((await db!.Database.GetPendingMigrationsAsync()).Any()))
+{
+    await db!.Database.MigrateAsync();
+}
+
+await DataSeed.AddAsync(db);
+
 app.Run();
