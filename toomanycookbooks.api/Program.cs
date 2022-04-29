@@ -14,7 +14,8 @@ builder.Services.AddHealthChecks();
 
 builder.Services.AddSingleton(sp => sp.GetService<IConfiguration>()!.GetSection(GlobalConfiguration.Name).Get<GlobalConfiguration>());
 
-builder.Services.AddDbContext<TmcbDbContext>(options => {
+builder.Services.AddDbContext<TmcbDbContext>(options =>
+{
     options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(TmcbDbContext)));
 });
 
@@ -33,17 +34,21 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseEndpoints(builder => {
+app.UseEndpoints(builder =>
+{
     builder.MapControllers();
     builder.MapHealthChecks("/api/status");
 });
 
-var db = app.Services.GetService<TmcbDbContext>();
-if ((await db!.Database.GetPendingMigrationsAsync()).Any()))
+using (var scope = app.Services.CreateScope())
 {
-    await db!.Database.MigrateAsync();
-}
+    var db = scope.ServiceProvider.GetService<TmcbDbContext>();
+    if ((await db!.Database.GetPendingMigrationsAsync()).Any())
+    {
+        await db!.Database.MigrateAsync();
+    }
 
-await DataSeed.AddAsync(db);
+    await DataSeed.AddAsync(db);
+}
 
 app.Run();
