@@ -12,7 +12,7 @@ namespace TooManyCookbooks.Api.Data.Models
         public Guid Id { get; set; } = Guid.NewGuid();
         public string? Name { get; set; }
 
-        public ICollection<Ingredient>? Ingredients { get; set; }
+        public ICollection<Ingredient>? Ingredients { get; set; } = new List<Ingredient>();
 
         public Guid BookId { get; set; }
         public virtual Book? Book { get; set; }
