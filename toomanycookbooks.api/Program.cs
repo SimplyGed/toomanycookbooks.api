@@ -40,15 +40,15 @@ app.UseEndpoints(builder =>
     builder.MapHealthChecks("/api/status");
 });
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var db = scope.ServiceProvider.GetService<TmcbDbContext>();
-//     if ((await db!.Database.GetPendingMigrationsAsync()).Any())
-//     {
-//         await db!.Database.MigrateAsync();
-//     }
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetService<TmcbDbContext>();
+    if ((await db!.Database.GetPendingMigrationsAsync()).Any())
+    {
+        await db!.Database.MigrateAsync();
+    }
 
-//     await DataSeed.AddAsync(db);
-// }
+    await DataSeed.AddAsync(db);
+}
 
 app.Run();
