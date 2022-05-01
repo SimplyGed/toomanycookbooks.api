@@ -41,6 +41,10 @@ stages:
         Dockerfile: '**/Dockerfile'
         tags: $(Build.BuildNumber)
 
+- stage: Deployment
+  displayName: Deploy To Dev
+  
+  jobs:
   - job:
     displayName: Deploy
     condition: and(succeeded(), eq(variables.isMain, 'true'))
@@ -52,6 +56,6 @@ stages:
         azureSubscription: 'Visual Studio Premium with MSDN(bbe8e064-d490-470f-8e8a-485bd7227583)'
         appType: 'webAppContainer'
         WebAppName: 'toomanycookbooksapi-dev'
-        DockerNamespace: 'toomanycookbooksdev'
+        DockerNamespace: 'toomanycookbooksdev.azurecr.io'
         DockerRepository: 'toomanycookbooksapi-dev'
         DockerImageTag: '$(Build.BuildNumber)'
