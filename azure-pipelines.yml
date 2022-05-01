@@ -43,12 +43,12 @@ stages:
 
 - stage: Deployment
   displayName: Deploy To Dev
-  
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables.isMain, 'true'))
+
   jobs:
   - job:
     displayName: Deploy
-    condition: and(succeeded(), eq(variables.isMain, 'true'))
-    dependsOn: Build
     steps:
     - task: AzureRmWebAppDeployment@4
       inputs:
