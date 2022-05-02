@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TooManyCookbooks.Api.Data;
-using TooManyCookbooks.Api.Data.Models;
 
 namespace TooManyCookbooks.Api.Contollers
 {
@@ -15,9 +14,19 @@ namespace TooManyCookbooks.Api.Contollers
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Recipe>> Get()
+        public async Task<ObjectResult> Get()
         {
-            return await _dbContext.Recipes!.ToListAsync();
+            var recipes = await _dbContext.Recipes!.Include(r => r.Book).ToListAsync();
+
+            var response = recipes.Select(r => new
+            {
+                r.Id,
+                r.Name,
+                Author = r.Book!.Author,
+                Book = r.Book!.Title
+            });
+
+            return Ok(response);
         }
     }
 }
