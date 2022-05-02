@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
+builder.Services.AddCors();
 
 builder.Services.AddSingleton(sp => sp.GetService<IConfiguration>()!.GetSection(GlobalConfiguration.Name).Get<GlobalConfiguration>());
 
@@ -27,6 +28,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(policy => {
+    policy
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin()
+        .Build();
+});
 
 app.UseHttpsRedirection();
 
