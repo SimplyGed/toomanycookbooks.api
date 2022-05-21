@@ -33,11 +33,15 @@ namespace TooManyCookbooks.Api.Contollers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Recipe recipe)
+        public async Task<IActionResult> Add([FromBody]RecipeDto recipeDto)
         {
             var book = _dbContext.Books!.First();
 
-            recipe.BookId = book.Id;
+            var recipe = new Recipe
+            {
+                BookId = book.Id,
+                Name = recipeDto.Name
+            };
 
             _dbContext.Recipes!.Add(recipe);
 
